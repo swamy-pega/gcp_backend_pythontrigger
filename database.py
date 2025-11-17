@@ -15,7 +15,7 @@ load_dotenv()
 
 #DATABASE_URL = os.getenv("DATABASE_URL")
 DATABASE_URL=settings.db_url
-print("Connected to DB: "+DATABASE_URL)
+print("DB URL: "+DATABASE_URL)
 
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -40,7 +40,7 @@ if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     #"?host=/cloudsql/turing-diode-477800-b0:northamerica-northeast2:postgresreact")
 #DATABASE_URL=settings.db_url
 #print(" DB URL: "+DATABASE_URL) 
-DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@/{DB_NAME}?host=/cloudsql/{INSTANCE_CONNECTION_NAME}"
+#DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@/{DB_NAME}?host=/cloudsql/{INSTANCE_CONNECTION_NAME}"
 print(" DB URL: "+DATABASE_URL) 
 
 #m/swamy-pega/python_api.git

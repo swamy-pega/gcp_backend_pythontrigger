@@ -1,4 +1,5 @@
 #install fastapi
+from asyncio.log import logger
 import os
 from fastapi import FastAPI, HTTPException,status,Response,Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +14,7 @@ from zoneinfo  import ZoneInfo
 #import psycopg
 #import time
 #get database connection
-from database import Base, engine,get_db
+from database import Base, engine
 
 #get table model from model
 from models import Base,Post,Questions,Answers
@@ -28,17 +29,41 @@ from routers.getquestions import questionsrouter
 from routers.users import userrouter  
 from routers.auth import authrouter     
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
+import time
+import logging
+#from sqlalchemy.orm import Session
 #from config import settings
-from fastapi.staticfiles import StaticFiles
+#from fastapi.staticfiles import StaticFiles
 #from flask import Flask, jsonify,redirect    
 
 
 app = FastAPI()
+# Retry configuration
+MAX_RETRIES = 5
+RETRY_DELAY = 3  # seconds
+
 @app.on_event("startup")
 def on_startup():
-    # Cloud SQL socket is ready now
-    Base.metadata.create_all(bind=engine)
+    """
+    Create database tables safely on startup.
+    Retries if the database connection is not ready.
+    """
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            Base.metadata.create_all(bind=engine)
+            logger.info("✅ Tables created successfully on startup.")
+            break
+        except OperationalError as e:
+            logger.warning(f"Attempt {attempt}/{MAX_RETRIES} failed: {e}")
+            if attempt < MAX_RETRIES:
+                logger.info(f"Retrying in {RETRY_DELAY} seconds...")
+                time.sleep(RETRY_DELAY)
+            else:
+                logger.error("❌ Could not connect to database after multiple attempts.")
+        except Exception as e:
+            logger.exception(f"❌ Unexpected error during startup: {e}")
+            break
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:8000",  "http://localhost:8000",
@@ -59,7 +84,7 @@ app.add_middleware(
 #get db for sqlalchemy
 
 
-app.include_router(postrouter)
+#app.include_router(postrouter)
 app.include_router(questionsrouter)
 app.include_router(userrouter)
 app.include_router(authrouter)
