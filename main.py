@@ -84,7 +84,7 @@ app.add_middleware(
 #get db for sqlalchemy
 
 
-#app.include_router(postrouter)
+app.include_router(postrouter)
 app.include_router(questionsrouter)
 app.include_router(userrouter)
 app.include_router(authrouter)
