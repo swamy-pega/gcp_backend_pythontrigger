@@ -33,9 +33,12 @@ from sqlalchemy.orm import Session
 from fastapi.staticfiles import StaticFiles
 #from flask import Flask, jsonify,redirect    
 
-Base.metadata.create_all(bind=engine)
-app = FastAPI()
 
+app = FastAPI()
+@app.on_event("startup")
+def on_startup():
+    # Cloud SQL socket is ready now
+    Base.metadata.create_all(bind=engine)
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:8000",  "http://localhost:8000",
@@ -54,8 +57,7 @@ app.add_middleware(
 
 #print("ssetting..." + str(settings.db_host) + " " + str(settings.db_port) + " " + str(settings.db_user) + " " + str(settings.db_password) + " " + str(settings.db_name))
 #get db for sqlalchemy
-db = session
-print("Database connection established successfully"+" "+str(db))
+
 
 app.include_router(postrouter)
 app.include_router(questionsrouter)
@@ -97,5 +99,6 @@ def read_root():
 def hello():
     return {"message": "Hello from FastAPI! 66"}
 
-
+db = session
+print("Database connection established successfully"+" "+str(db))
 
