@@ -40,6 +40,8 @@ DATABASE_URL = (
 )
 DATABASE_URL=settings.db_url
 print(" DB URL: "+DATABASE_URL) 
+
+
 #m/swamy-pega/python_api.git
 engine = create_engine(DATABASE_URL)
 #turing-diode-477800-b0:northamerica-northeast2:postgresreact
