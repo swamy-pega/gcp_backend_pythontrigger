@@ -47,7 +47,7 @@ engine = create_engine(DATABASE_URL)
 #turing-diode-477800-b0:northamerica-northeast2:postgresreact
 # Session setup
 SessionLocal = sessionmaker(autoflush=False,autocommit=False,bind=engine)
-session = SessionLocal()
+#session = SessionLocal()
 
 Base = declarative_base()
 

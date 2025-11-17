@@ -13,7 +13,7 @@ from zoneinfo  import ZoneInfo
 #import psycopg
 #import time
 #get database connection
-from database import Base, engine,session,Session,get_db
+from database import Base, engine,get_db
 
 #get table model from model
 from models import Base,Post,Questions,Answers
@@ -99,6 +99,6 @@ def read_root():
 def hello():
     return {"message": "Hello from FastAPI! 66"}
 
-db = session
-print("Database connection established successfully"+" "+str(db))
+#db = session
+#print("Database connection established successfully"+" "+str(db))
 
